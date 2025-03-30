@@ -22,13 +22,22 @@
 -> f(n)은 지금까지의 최소 연산 횟수 + 이번에 새로 수행한 연산(1회)
 """
 import sys
+memory = {} # 메모이제이션
 def main():
     n = int(sys.stdin.readline().strip())
     # f(n) = min(f(n//3) , f(n//2) , f(n-1)) + 1
-    def f(n):
-        if n == 1:
+    def f(x):
+        min_count = f(x-1) + 1
+        if x in memory:
+            return memory[x]
+        if(x) == 1:
             return 0
-        elif n % 2 == 0:
-            f(n//2),f(n-1)
+        elif x % 2 == 0:
+            min_count = min(f(x//2) + 1, min_count)
+        elif x % 3 == 0:
+            min_count = min(f(x//3) + 1, min_count)
+        if x not in memory:
+            memory[x] = min_count
+        return min_count
 if __name__ == "__main__":
     main()
