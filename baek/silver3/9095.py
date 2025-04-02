@@ -30,3 +30,5 @@ def main():
         print(a)
 if __name__ == "__main__":
     main()
+
+# DP로 풀어보기
