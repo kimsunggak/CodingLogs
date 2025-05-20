@@ -17,61 +17,50 @@
 - queue.popleft()로 하면 O(1)임
 """
 import sys
-def graph(n,m,v):
+def graph(n,m):
     node = [[] for _ in range(n+1)]
-    visited = [False] * (n+1)
     for _ in range(m):
         a,b = map(int,sys.stdin.readline().split())
         node[a].append(b)
         node[b].append(a)
-        node[a].sort()
-        node[b].sort()
+    for node_list in node:
+        node_list.sort()
     return node
 def bfs(Node,n,v):
     result = []
     visited = [False] * (n+1)
     queue = [v]
     visited[v] = True
-    while queue:
-        # 초기 v값 queue에서 빼서
-        v = queue.pop(0)
-        # bfs 결과에 추가
-        result.append(v)
-        # v랑 인접한 노드 탐색
-        for i in Node[v]:
+    front = 0
+    # queue의 길이만큼 앞에꺼부터 빼기
+    # 이렇게하면 시작 복잡도가 O(1)임
+    while front < len(queue):
+        cur = queue[front]
+        front += 1
+        result.append(cur)
+        for i in Node[cur]:
             if not visited[i]:
-                # 방문 안한 노드면 queue에 추가하고 다음 인접 방문을 위한 자원을 마련함
                 visited[i] = True
                 queue.append(i)
-            else:
-                # 방문한 노드면 queue에 추가하지 않음
-                continue
-    for r in result:
-        print(r,end=' ')
+    print(*result)
         
 def dfs(Node,n,v):
     visited = [False] * (n+1)  
     stack = [v]
-    visited[v] = True
     result = []
     while stack:
-        v = stack.pop(-1)
-        result.append(v)
-        # 내림차순으로 해서 작은 노드부터 방문하게 해야함
-        Node[v].sort(reverse=True)
-        for i in Node[v]:
-            if not visited[i]:
-                visited[i] = True
-                stack.append(i)
-            else:
-                continue
-    for r in result:
-        print(r,end=' ')
+        v = stack.pop()
+        if not visited[v]:
+            visited[v] = True
+            result.append(v)
+            for i in reversed(Node[v]):
+                if not visited[i]:
+                    stack.append(i)
+    print(*result)
 if __name__ == "__main__":
     n,m,v = map(int,sys.stdin.readline().split())
-    field = graph(n,m,v)
+    field = graph(n,m)
     dfs(field,n,v)
-    print()
     bfs(field,n,v)
 
 """
@@ -85,7 +74,7 @@ def bfs(Node,n,v):
     front = 0
     # queue의 길이만큼 앞에꺼부터 빼기
     # 이렇게하면 시작 복잡도가 O(1)임
-    whlie front < len(queue):
+    while front < len(queue):
         cur = queue[front]
         front += 1
         result.append(cur)
